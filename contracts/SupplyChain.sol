@@ -94,19 +94,19 @@ contract SupplyChain {
     if the buyer paid enough, and check the value after the function is called to make sure the buyer is
     refunded any excess ether sent. Remember to call the event associated with this function!*/
 
-  function buyItem(uint sku)
-    public payable forSale(sku) paidEnough(items[sku].price) checkValue(sku)
+  function buyItem(uint sku) forSale(sku) paidEnough(items[sku].price) checkValue(sku)
+    public payable 
   {
       items[sku].buyer = msg.sender;
       items[sku].state = State.Sold;
-      items[sku].seller.transfer(msg.value);
+      items[sku].seller.transfer(items[sku].price);
       emit LogForSale(sku);
   }
 
   /* Add 2 modifiers to check if the item is sold already, and that the person calling this function
   is the seller. Change the state of the item to shipped. Remember to call the event associated with this function!*/
-  function shipItem(uint sku)  
-    public sold(sku) verifyCaller(items[sku].seller)
+  function shipItem(uint sku)  sold(sku) verifyCaller(items[sku].seller)
+    public 
   {
       items[sku].state = State.Shipped;
       emit LogShipped(sku);
@@ -114,8 +114,8 @@ contract SupplyChain {
 
   /* Add 2 modifiers to check if the item is shipped already, and that the person calling this function
   is the buyer. Change the state of the item to received. Remember to call the event associated with this function!*/
-  function receiveItem(uint sku) 
-    public shipped(sku) verifyCaller(items[sku].buyer)
+  function receiveItem(uint sku) shipped(sku) verifyCaller(items[sku].buyer)
+    public 
   {
       items[sku].state = State.Received;
       emit LogReceived(sku);
